@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOB Ops Daily Report Generator</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f4f4;
+    padding:20px;
+}
+
+.container{
+    max-width:850px;
+    margin:auto;
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+h2{
+    text-align:center;
+    margin-bottom:10px;
+}
+
+.note{
+    text-align:center;
+    font-size:12px;
+    color:#666;
+    margin-bottom:20px;
+    line-height:1.5;
+}
+
+input, select, textarea, button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    font-size:15px;
+    box-sizing:border-box;
+}
+
+.report-item{
+    margin-top:15px;
+}
+
+.report-item label{
+    font-weight:bold;
+    display:block;
+    margin-bottom:5px;
+}
+
+textarea{
+    margin-top:20px;
+    resize:none;
+    overflow:hidden;
+    min-height:350px;
+    line-height:1.5;
+    white-space:pre-wrap;
+    font-family:Arial, sans-serif;
+}
+
+button{
+    background:green;
+    color:white;
+    border:none;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+button:active{
+    transform:scale(0.98);
+}
+
+.copied{
+    background:#0a7f2e !important;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h2>SOB Ops Daily Report Generator</h2>
+
+<p class="note">
+This is a default report. Kindly check before sending.<br>
+यह एक डिफ़ॉल्ट रिपोर्ट है, कृपया भेजने से पहले जांच लें।
+</p>
+
+<input type="text" id="fname" placeholder="First Name"
+oninput="this.value=this.value.replace(/[^A-Za-z ]/g,'')">
+
+<input type="text" id="lname" placeholder="Last Name"
+oninput="this.value=this.value.replace(/[^A-Za-z ]/g,'')">
+
+<select id="location">
+<option value="">Select Location</option>
+
+<option>1st Counter</option>
+<option>2nd Counter</option>
+<option>3rd Counter</option>
+<option>4th Counter</option>
+<option>5th Counter</option>
+<option>6th Counter</option>
+<option>7th Counter</option>
+<option>8th Counter</option>
+<option>Ground Floor Counter 10</option>
+<option>Ground Floor Counter 11</option>
+<option>Group Counter</option>
+<option>Group Counter/Lost & Found</option>
+<option>280 ft.</option>
+<option>270 ft.</option>
+<option>Nij Aatma Manthan</option>
+<option>Divyanubhuti Demo Area</option>
+<option>Statue Ground Floor</option>
+<option>VIP Gate</option>
+<option>Sangam Sthal</option>
+<option>Upgrade Counter/Statue Steps</option>
+
+</select>
+
+<div id="fields"></div>
+
+<textarea id="output" placeholder="Report will appear here automatically..."></textarea>
+
+<button id="copyBtn" onclick="copyReport()">Copy Report</button>
+
+</div>
+
+<script>
+
+document.getElementById("fname").focus();
+
+const reportFields = [
+
+{
+title:"POS/EDC",
+options:[
+"Working",
+"Working (Network issue)",
+"Not Working",
+"EDC Not Working",
+"POS Hanging"
+]
+},
+
+{
+title:"Charger/Printer",
+options:[
+"Available & Working",
+"Printer Not Working",
+"Charger Not Working",
+"Out of Stock"
+]
+},
+
+{
+title:"Floats/Bands/Maps",
+options:[
+"Available",
+"Out of Stock",
+"Bands Not Available",
+"Maps Not Available"
+]
+},
+
+{
+title:"Mic/Cash Key",
+options:[
+"Available",
+"Not Available"
+]
+},
+
+{
+title:"Telephone/Aroma Diffuser",
+options:[
+"Available & Working",
+"Aroma Diffuser Not Working",
+"Telephone Not Working",
+"Both Not Working"
+]
+},
+
+{
+title:"TV/AC",
+options:[
+"Available & Working",
+"TV Not Working",
+"AC Not Working",
+"Both Not Working"
+]
+},
+
+{
+title:"Floor/Ceiling Lights",
+options:[
+"All Working",
+"1 Light Not Working",
+"2 Lights Flickering",
+"Lights Off",
+"Maintenance Required"
+]
+},
+
+{
+title:"Q Manager/Benches",
+options:[
+"Available",
+"Not Available",
+"Damaged"
+]
+},
+
+{
+title:"Handheld Scanner",
+options:[
+"Available & Working",
+"Not Working",
+"Not Charging",
+"Not Available"
+]
+},
+
+{
+title:"Undertaking/Story Feedback Forms",
+options:[
+"Available",
+"Not Available"
+]
+},
+
+{
+title:"Baby Care Room/Emergency Exit Map",
+options:[
+"Available & Working",
+"Cleaning Undergoing",
+"Lights Not On",
+"Not Available"
+]
+},
+
+{
+title:"Cleaning/Maintenance",
+options:[
+"OK",
+"Work in Progress",
+"AC Duct Cleaning",
+"Deep Cleaning Undergoing",
+"Maintenance Required"
+]
+},
+
+{
+title:"Signages/Standees",
+options:[
+"Available",
+"Not Available",
+"Damaged"
+]
+},
+
+{
+title:"RO Water/Facilities",
+options:[
+"OK",
+"Water Cooler Leaking",
+"RO Not Working",
+"Cleaning Required"
+]
+}
+
+];
+
+const fieldsContainer = document.getElementById("fields");
+
+reportFields.forEach((field,index)=>{
+
+const div = document.createElement("div");
+div.className = "report-item";
+
+div.innerHTML = `
+<label>${index+1}. ${field.title}</label>
+
+<select class="dynamicSelect" data-title="${field.title}">
+${field.options.map(option=>`<option>${option}</option>`).join("")}
+</select>
+`;
+
+fieldsContainer.appendChild(div);
+
+});
+
+function capitalize(text){
+
+return text
+.toLowerCase()
+.split(' ')
+.map(word => word.charAt(0).toUpperCase()+word.slice(1))
+.join(' ');
+
+}
+
+function getTodayDate(){
+
+const today = new Date();
+
+const day = String(today.getDate()).padStart(2,'0');
+const month = String(today.getMonth()+1).padStart(2,'0');
+const year = today.getFullYear();
+
+return `${day}/${month}/${year}`;
+
+}
+
+function generateReport(){
+
+const fname = capitalize(document.getElementById("fname").value.trim());
+const lname = capitalize(document.getElementById("lname").value.trim());
+const location = document.getElementById("location").value;
+
+if(fname==="" || lname==="" || location===""){
+
+document.getElementById("output").value="";
+return;
+
+}
+
+const selects = document.querySelectorAll(".dynamicSelect");
+
+let report = `*Location Awareness Report | ${getTodayDate()}*
+*Location: ${location}*
+
+`;
+
+selects.forEach((select,index)=>{
+
+const title = select.dataset.title;
+const value = select.value;
+
+report += `${index+1}. _*${title}:*_ ${value}\n`;
+
+});
+
+report += `
+*Notes*: NA
+
+*Reported By:* ${fname} ${lname}`;
+
+const textarea = document.getElementById("output");
+
+textarea.value = report;
+
+textarea.style.height = "auto";
+textarea.style.height = textarea.scrollHeight + "px";
+
+}
+
+document.getElementById("fname").addEventListener("input",generateReport);
+document.getElementById("lname").addEventListener("input",generateReport);
+document.getElementById("location").addEventListener("change",generateReport);
+
+document.addEventListener("change",(e)=>{
+
+if(e.target.classList.contains("dynamicSelect")){
+generateReport();
+}
+
+});
+
+async function copyReport(){
+
+const output = document.getElementById("output");
+const button = document.getElementById("copyBtn");
+
+if(output.value.trim()===""){
+return;
+}
+
+try{
+
+await navigator.clipboard.writeText(output.value);
+
+}catch{
+
+output.select();
+document.execCommand("copy");
+
+}
+
+button.innerText = "Copied";
+button.classList.add("copied");
+
+setTimeout(()=>{
+
+button.innerText = "Copy Report";
+button.classList.remove("copied");
+
+},1500);
+
+}
+
+</script>
+
+</body>
+</html>
