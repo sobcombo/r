@@ -24,6 +24,26 @@ body{
     box-shadow:0 0 10px rgba(0,0,0,0.1);
 }
 
+.top-buttons{
+    display:flex;
+    justify-content:flex-end;
+    margin-bottom:10px;
+}
+
+.switch-btn{
+    background:#1565c0;
+    color:white;
+    padding:10px 14px;
+    border-radius:8px;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:bold;
+}
+
+.switch-btn:hover{
+    background:#0d47a1;
+}
+
 h2{
     text-align:center;
     margin-bottom:10px;
@@ -77,6 +97,12 @@ button:active{
 
 <div class="container">
 
+<div class="top-buttons">
+<a class="switch-btn" href="https://sobcombo.github.io/s/" target="_blank">
+Switch to Combo Calc
+</a>
+</div>
+
 <h2>SOB Ops Daily Report Generator</h2>
 
 <p class="note">
@@ -84,9 +110,9 @@ This is a default report. Kindly check before sending.<br>
 यह एक डिफ़ॉल्ट रिपोर्ट है, कृपया भेजने से पहले जांच लें।
 </p>
 
-<input type="text" id="fname" placeholder="First Name">
+<input type="text" id="fname" placeholder="First Name" required>
 
-<input type="text" id="lname" placeholder="Last Name">
+<input type="text" id="lname" placeholder="Last Name" required>
 
 <select id="location">
 
@@ -352,6 +378,34 @@ output.value = report;
 document.getElementById("fname").addEventListener("input", generateReport);
 document.getElementById("lname").addEventListener("input", generateReport);
 document.getElementById("location").addEventListener("change", generateReport);
+
+document.getElementById("output").addEventListener("input", function(){
+
+const fname = capitalizeWords(document.getElementById("fname").value.trim());
+const lname = capitalizeWords(document.getElementById("lname").value.trim());
+
+if(fname === "" || lname === ""){
+    return;
+}
+
+const fixedName = `${fname} ${lname}`;
+
+let text = this.value;
+
+const reportedByRegex = /\*Reported By:\*\s*([\s\S]*)$/;
+
+if(reportedByRegex.test(text)){
+
+text = text.replace(
+reportedByRegex,
+`*Reported By:*\n${fixedName}`
+);
+
+this.value = text;
+
+}
+
+});
 
 document.getElementById("copyBtn").addEventListener("click", async function(){
 
