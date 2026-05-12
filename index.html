@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>SOB Ops Daily Report Generator</title>
 
 <style>
@@ -11,10 +12,11 @@ body{
     font-family: Arial, sans-serif;
     background:#f4f4f4;
     padding:20px;
+    margin:0;
 }
 
 .container{
-    max-width:850px;
+    max-width:900px;
     margin:auto;
     background:white;
     padding:25px;
@@ -31,36 +33,24 @@ h2{
     text-align:center;
     font-size:12px;
     color:#666;
+    line-height:1.6;
     margin-bottom:20px;
-    line-height:1.5;
 }
 
 input, select, textarea, button{
     width:100%;
     padding:12px;
-    margin-top:10px;
+    margin-top:12px;
     border-radius:8px;
     border:1px solid #ccc;
     font-size:15px;
     box-sizing:border-box;
 }
 
-.report-item{
-    margin-top:15px;
-}
-
-.report-item label{
-    font-weight:bold;
-    display:block;
-    margin-bottom:5px;
-}
-
 textarea{
-    margin-top:20px;
-    resize:none;
-    overflow:hidden;
-    min-height:350px;
-    line-height:1.5;
+    resize:vertical;
+    min-height:450px;
+    line-height:1.6;
     white-space:pre-wrap;
     font-family:Arial, sans-serif;
 }
@@ -78,7 +68,7 @@ button:active{
 }
 
 .copied{
-    background:#0a7f2e !important;
+    background:#0b7d2b !important;
 }
 
 </style>
@@ -94,13 +84,12 @@ This is a default report. Kindly check before sending.<br>
 यह एक डिफ़ॉल्ट रिपोर्ट है, कृपया भेजने से पहले जांच लें।
 </p>
 
-<input type="text" id="fname" placeholder="First Name"
-oninput="this.value=this.value.replace(/[^A-Za-z ]/g,'')">
+<input type="text" id="fname" placeholder="First Name">
 
-<input type="text" id="lname" placeholder="Last Name"
-oninput="this.value=this.value.replace(/[^A-Za-z ]/g,'')">
+<input type="text" id="lname" placeholder="Last Name">
 
 <select id="location">
+
 <option value="">Select Location</option>
 
 <option>1st Counter</option>
@@ -111,199 +100,214 @@ oninput="this.value=this.value.replace(/[^A-Za-z ]/g,'')">
 <option>6th Counter</option>
 <option>7th Counter</option>
 <option>8th Counter</option>
+
 <option>Ground Floor Counter 10</option>
 <option>Ground Floor Counter 11</option>
+
 <option>Group Counter</option>
 <option>Group Counter/Lost & Found</option>
-<option>280 ft.</option>
-<option>270 ft.</option>
+
 <option>Nij Aatma Manthan</option>
-<option>Divyanubhuti Demo Area</option>
-<option>Statue Ground Floor</option>
-<option>VIP Gate</option>
-<option>Sangam Sthal</option>
+
+<option>270 ft.</option>
+<option>280 ft.</option>
+
 <option>Upgrade Counter/Statue Steps</option>
+
+<option>VIP Gate</option>
+
+<option>Sangam Sthal</option>
+
+<option>Statue Ground Floor</option>
+
+<option>Divyanubhuti Demo Area</option>
 
 </select>
 
-<div id="fields"></div>
+<textarea id="output" placeholder="Report will appear automatically here..."></textarea>
 
-<textarea id="output" placeholder="Report will appear here automatically..."></textarea>
-
-<button id="copyBtn" onclick="copyReport()">Copy Report</button>
+<button id="copyBtn">Copy Report</button>
 
 </div>
 
 <script>
 
-document.getElementById("fname").focus();
+const reports = {
 
-const reportFields = [
+"1st Counter": `1. _*POS/EDC:*_ Working
+2. _*Charger/Printer:*_ Available & Working
+3. _*Floats/Bands/Maps:*_ Available
+4. _*Mic/Cash Key:*_ Working & Available
+5. _*Telephone/Aroma Diffuser:*_ Working / N/A
+6. _*TV/AC:*_ Available & Working
+7. _*Floor/Ceiling Lights:*_ OK
+8. _*Queue Managers/Benches:*_ N/A
+9. _*Handheld Scanner:*_ N/A
+10. _*Undertaking Forms/Story Feedback Forms:*_ N/A
+11. _*Baby Care Room/Emergency Exit Map:*_ N/A
+12. _*Cleaning/Maintenance:*_ OK
+13. _*Signages/Standees:*_ OK
+14. _*RO Water/Facilities:*_ N/A`,
 
-{
-title:"POS/EDC",
-options:[
-"Working",
-"Working (Network issue)",
-"Not Working",
-"EDC Not Working",
-"POS Hanging"
-]
-},
+"2nd Counter": "",
+"3rd Counter": "",
+"4th Counter": "",
+"5th Counter": "",
+"6th Counter": "",
+"7th Counter": "",
+"8th Counter": "",
+"Ground Floor Counter 10": "",
+"Ground Floor Counter 11": "",
+"Group Counter": "",
+"Group Counter/Lost & Found": "",
 
-{
-title:"Charger/Printer",
-options:[
-"Available & Working",
-"Printer Not Working",
-"Charger Not Working",
-"Out of Stock"
-]
-},
+"Nij Aatma Manthan": `1. _*POS/EDC:*_ Working
+2. _*Charger/Printer:*_ Available & Working
+3. _*Floats/Bands/Maps:*_ Available
+4. _*Mic/Cash Key:*_ N/A / Available
+5. _*Telephone/Aroma Diffuser:*_ Available & Working
+6. _*TV/AC:*_ N/A / Working
+7. _*Floor/Ceiling Lights:*_ OK
+8. _*Queue Managers/Benches:*_ Available
+9. _*Handheld Scanner:*_ Working & Charged
+10. _*Undertaking Forms/Story Feedback Forms:*_ Available / N/A
+11. _*Baby Care Room/Emergency Exit Map:*_ OK
+12. _*Cleaning/Maintenance:*_ OK
+13. _*Signages/Standees:*_ OK
+14. _*RO Water/Facilities:*_ N/A`,
 
-{
-title:"Floats/Bands/Maps",
-options:[
-"Available",
-"Out of Stock",
-"Bands Not Available",
-"Maps Not Available"
-]
-},
+"280 ft.": `1. _*POS/EDC:*_ N/A
+2. _*Charger/Printer:*_ N/A
+3. _*Floats/Bands/Maps:*_ Maps Available
+4. _*Mic/Cash Key:*_ N/A
+5. _*Telephone/Aroma Diffuser:*_ Working
+6. _*TV/AC:*_ N/A
+7. _*Floor/Ceiling Lights:*_ OK
+8. _*Queue Managers/Benches:*_ Available
+9. _*Handheld Scanner:*_ N/A
+10. _*Undertaking Forms/Story Feedback Forms:*_ N/A
+11. _*Baby Care Room/Emergency Exit Map:*_ N/A
+12. _*Cleaning/Maintenance:*_ OK
+13. _*Signages/Standees:*_ OK
+14. _*RO Water/Facilities:*_ N/A`,
 
-{
-title:"Mic/Cash Key",
-options:[
-"Available",
-"Not Available"
-]
-},
+"270 ft.": `1. _*POS/EDC:*_ N/A
+2. _*Charger/Printer:*_ N/A
+3. _*Floats/Bands/Maps:*_ Maps Available
+4. _*Mic/Cash Key:*_ N/A
+5. _*Telephone/Aroma Diffuser:*_ Working
+6. _*TV/AC:*_ N/A
+7. _*Floor/Ceiling Lights:*_ OK
+8. _*Queue Managers/Benches:*_ Available
+9. _*Handheld Scanner:*_ N/A
+10. _*Undertaking Forms/Story Feedback Forms:*_ N/A / Available
+11. _*Baby Care Room/Emergency Exit Map:*_ N/A
+12. _*Cleaning/Maintenance:*_ OK
+13. _*Signages/Standees:*_ OK
+14. _*RO Water/Facilities:*_ Drinking Water Available / N/A`,
 
-{
-title:"Telephone/Aroma Diffuser",
-options:[
-"Available & Working",
-"Aroma Diffuser Not Working",
-"Telephone Not Working",
-"Both Not Working"
-]
-},
+"Upgrade Counter/Statue Steps": `1. _*POS/EDC:*_ Working
+2. _*Charger/Printer:*_ Available & Working
+3. _*Floats/Bands/Maps:*_ Available
+4. _*Mic/Cash Key:*_ Working & Available
+5. _*Telephone/Aroma Diffuser:*_ Working / N/A
+6. _*TV/AC:*_ Available & Working
+7. _*Floor/Ceiling Lights:*_ OK
+8. _*Queue Managers/Benches:*_ Available
+9. _*Handheld Scanner:*_ N/A
+10. _*Undertaking Forms/Story Feedback Forms:*_ N/A
+11. _*Baby Care Room/Emergency Exit Map:*_ N/A
+12. _*Cleaning/Maintenance:*_ OK
+13. _*Signages/Standees:*_ OK
+14. _*RO Water/Facilities:*_ N/A`,
 
-{
-title:"TV/AC",
-options:[
-"Available & Working",
-"TV Not Working",
-"AC Not Working",
-"Both Not Working"
-]
-},
+"VIP Gate": `1. _*POS/EDC:*_ Working
+2. _*Charger/Printer:*_ Available & Working
+3. _*Floats/Bands/Maps:*_ Available
+4. _*Mic/Cash Key:*_ N/A
+5. _*Telephone/Aroma Diffuser:*_ Working / N/A
+6. _*TV/AC:*_ N/A
+7. _*Floor/Ceiling Lights:*_ OK
+8. _*Queue Managers/Benches:*_ Available
+9. _*Handheld Scanner:*_ Available & Working
+10. _*Undertaking Forms/Story Feedback Forms:*_ N/A
+11. _*Baby Care Room/Emergency Exit Map:*_ N/A
+12. _*Cleaning/Maintenance:*_ OK
+13. _*Signages/Standees:*_ OK
+14. _*RO Water/Facilities:*_ OK`,
 
-{
-title:"Floor/Ceiling Lights",
-options:[
-"All Working",
-"1 Light Not Working",
-"2 Lights Flickering",
-"Lights Off",
-"Maintenance Required"
-]
-},
+"Sangam Sthal": `1. _*POS/EDC:*_ N/A
+2. _*Charger/Printer:*_ N/A
+3. _*Floats/Bands/Maps:*_ Maps Available
+4. _*Mic/Cash Key:*_ N/A
+5. _*Telephone/Aroma Diffuser:*_ N/A
+6. _*TV/AC:*_ N/A
+7. _*Park Lights:*_ OK
+8. _*Queue Managers/Benches:*_ Available
+9. _*Handheld Scanner:*_ N/A
+10. _*Undertaking Forms/Story Feedback Forms:*_ N/A
+11. _*Baby Care Room/Emergency Exit Map:*_ OK / N/A
+12. _*Cleaning/Maintenance:*_ OK
+13. _*Signages/Standees:*_ OK
+14. _*RO Water/Facilities:*_ OK`,
 
-{
-title:"Q Manager/Benches",
-options:[
-"Available",
-"Not Available",
-"Damaged"
-]
-},
+"Statue Ground Floor": `1. _*POS/EDC:*_ N/A
+2. _*Charger/Printer:*_ N/A
+3. _*Floats/Bands/Maps:*_ Maps Available
+4. _*Mic/Cash Key:*_ N/A
+5. _*Telephone/Aroma Diffuser:*_ Working & Available
+6. _*TV/AC:*_ Working
+7. _*Floor/Ceiling Lights:*_ OK
+8. _*Queue Managers/Benches:*_ Available
+9. _*Handheld Scanner:*_ Available & Working
+10. _*Undertaking Forms/Story Feedback Forms:*_ Available / N/A
+11. _*Baby Care Room/Emergency Exit Map:*_ OK
+12. _*Cleaning/Maintenance:*_ OK
+13. _*Signages/Standees:*_ OK
+14. _*RO Water/Facilities:*_ N/A`,
 
-{
-title:"Handheld Scanner",
-options:[
-"Available & Working",
-"Not Working",
-"Not Charging",
-"Not Available"
-]
-},
+"Divyanubhuti Demo Area": `1. _*Tab:*_ Available & Working
+2. _*Charger/Printer:*_ Available & Working
+3. _*Floats/Bands/Maps:*_ Maps Available
+4. _*Mic/Cash Key:*_ N/A
+5. _*Telephone/Aroma Diffuser:*_ N/A
+6. _*TV/AC:*_ N/A
+7. _*Floor/Ceiling Lights:*_ N/A
+8. _*Queue Managers/Benches:*_ Available
+9. _*Handheld Scanner:*_ N/A
+10. _*Undertaking Forms/Story Feedback Forms:*_ N/A
+11. _*Baby Care Room/Emergency Exit Map:*_ N/A
+12. _*Cleaning/Maintenance:*_ OK
+13. _*Signages/Standees:*_ OK
+14. _*RO Water/Facilities:*_ N/A`
 
-{
-title:"Undertaking/Story Feedback Forms",
-options:[
-"Available",
-"Not Available"
-]
-},
+};
 
-{
-title:"Baby Care Room/Emergency Exit Map",
-options:[
-"Available & Working",
-"Cleaning Undergoing",
-"Lights Not On",
-"Not Available"
-]
-},
+const counterTemplate = reports["1st Counter"];
 
-{
-title:"Cleaning/Maintenance",
-options:[
-"OK",
-"Work in Progress",
-"AC Duct Cleaning",
-"Deep Cleaning Undergoing",
-"Maintenance Required"
-]
-},
-
-{
-title:"Signages/Standees",
-options:[
-"Available",
-"Not Available",
-"Damaged"
-]
-},
-
-{
-title:"RO Water/Facilities",
-options:[
-"OK",
-"Water Cooler Leaking",
-"RO Not Working",
-"Cleaning Required"
-]
-}
-
-];
-
-const fieldsContainer = document.getElementById("fields");
-
-reportFields.forEach((field,index)=>{
-
-const div = document.createElement("div");
-div.className = "report-item";
-
-div.innerHTML = `
-<label>${index+1}. ${field.title}</label>
-
-<select class="dynamicSelect" data-title="${field.title}">
-${field.options.map(option=>`<option>${option}</option>`).join("")}
-</select>
-`;
-
-fieldsContainer.appendChild(div);
-
+[
+"2nd Counter",
+"3rd Counter",
+"4th Counter",
+"5th Counter",
+"6th Counter",
+"7th Counter",
+"8th Counter",
+"Ground Floor Counter 10",
+"Ground Floor Counter 11",
+"Group Counter",
+"Group Counter/Lost & Found"
+].forEach(loc => {
+    reports[loc] = counterTemplate;
 });
 
-function capitalize(text){
+function capitalizeWords(text){
 
 return text
 .toLowerCase()
 .split(' ')
-.map(word => word.charAt(0).toUpperCase()+word.slice(1))
+.filter(word => word.trim() !== "")
+.map(word => word.charAt(0).toUpperCase() + word.slice(1))
 .join(' ');
 
 }
@@ -322,90 +326,69 @@ return `${day}/${month}/${year}`;
 
 function generateReport(){
 
-const fname = capitalize(document.getElementById("fname").value.trim());
-const lname = capitalize(document.getElementById("lname").value.trim());
+const fname = capitalizeWords(document.getElementById("fname").value.trim());
+const lname = capitalizeWords(document.getElementById("lname").value.trim());
 const location = document.getElementById("location").value;
 
-if(fname==="" || lname==="" || location===""){
+const output = document.getElementById("output");
 
-document.getElementById("output").value="";
-return;
-
+if(fname === "" || lname === "" || location === ""){
+    output.value = "";
+    return;
 }
 
-const selects = document.querySelectorAll(".dynamicSelect");
-
-let report = `*Location Awareness Report | ${getTodayDate()}*
+const report = `*Location Awareness Report | ${getTodayDate()}*
 *Location: ${location}*
 
-`;
+${reports[location]}
 
-selects.forEach((select,index)=>{
+*Reported By:*
+${fname} ${lname}`;
 
-const title = select.dataset.title;
-const value = select.value;
-
-report += `${index+1}. _*${title}:*_ ${value}\n`;
-
-});
-
-report += `
-*Notes:* NA
-
-*Reported By:* ${fname} ${lname}`;
-
-const textarea = document.getElementById("output");
-
-textarea.value = report;
-
-textarea.style.height = "auto";
-textarea.style.height = textarea.scrollHeight + "px";
+output.value = report;
 
 }
 
-document.getElementById("fname").addEventListener("input",generateReport);
-document.getElementById("lname").addEventListener("input",generateReport);
-document.getElementById("location").addEventListener("change",generateReport);
+document.getElementById("fname").addEventListener("input", generateReport);
+document.getElementById("lname").addEventListener("input", generateReport);
+document.getElementById("location").addEventListener("change", generateReport);
 
-document.addEventListener("change",(e)=>{
-
-if(e.target.classList.contains("dynamicSelect")){
-generateReport();
-}
-
-});
-
-async function copyReport(){
+document.getElementById("copyBtn").addEventListener("click", async function(){
 
 const output = document.getElementById("output");
-const button = document.getElementById("copyBtn");
 
-if(output.value.trim()===""){
-return;
+if(output.value.trim() === ""){
+    return;
 }
 
 try{
 
 await navigator.clipboard.writeText(output.value);
 
-}catch{
+}catch(err){
 
+output.focus();
 output.select();
+output.setSelectionRange(0,999999);
+
 document.execCommand("copy");
 
 }
 
-button.innerText = "Copied";
-button.classList.add("copied");
+const btn = document.getElementById("copyBtn");
+
+btn.innerText = "Copied Successfully";
+
+btn.classList.add("copied");
 
 setTimeout(()=>{
 
-button.innerText = "Copy Report";
-button.classList.remove("copied");
+btn.innerText = "Copy Report";
+btn.classList.remove("copied");
 
 },1500);
 
-}
+});
 
 </script>
 
