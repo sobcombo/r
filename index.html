@@ -198,7 +198,51 @@ box-shadow:
 .copied{
     background:#0b7d2b !important;
 }
+.mini-reset-btn{
 
+width:auto;
+
+padding:6px 12px;
+
+margin:0 auto 10px auto;
+
+display:block;
+
+font-size:11px;
+
+background:linear-gradient(
+to bottom,
+#ffffff,
+#e8e8e8
+);
+
+color:#333;
+
+box-shadow:
+3px 3px 0 #bdbdbd,
+5px 6px 12px rgba(0,0,0,.18);
+
+}
+
+.mini-reset-btn:hover{
+
+transform:translate(-1px,-1px);
+
+box-shadow:
+4px 4px 0 #bdbdbd,
+7px 8px 14px rgba(0,0,0,.22);
+
+}
+
+.mini-reset-btn:active{
+
+transform:translateY(2px);
+
+box-shadow:
+0 1px 0 #bdbdbd,
+0 2px 4px rgba(0,0,0,.15);
+
+}
 </style>
 </head>
 <body>
@@ -217,6 +261,13 @@ box-shadow:
 This is a default report. Kindly check before sending.<br>
 यह एक डिफ़ॉल्ट रिपोर्ट है, कृपया भेजने से पहले जांच लें।
 </p>
+
+<button
+id="resetBtn"
+class="mini-reset-btn"
+onclick="resetForm()">
+Reset
+</button>
 
 <input type="text" id="fname" placeholder="First Name" required>
 
@@ -553,7 +604,17 @@ btn.classList.remove("copied");
 },1500);
 
 });
+function resetForm(){
 
+document.getElementById("fname").value = "";
+
+document.getElementById("lname").value = "";
+
+document.getElementById("location").selectedIndex = 0;
+
+document.getElementById("output").value = "";
+
+}
 </script>
 
 </body>
