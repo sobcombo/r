@@ -45,9 +45,9 @@ body{
 }
 .top-buttons{
     display:flex;
-    justify-content:center;
+    justify-content:flex-end;
     align-items:center;
-    padding:15px 0 5px 0;
+    padding:12px 16px 5px;
     margin-bottom:10px;
 }
 .switch-btn{
@@ -60,11 +60,11 @@ background:linear-gradient(
 
 color:white;
 
-padding:10px 18px;
+padding:4px 9px;
 
-border-radius:12px;
+border-radius:8px;
 
-font-size:13px;
+font-size:12px;
 font-weight:bold;
 
 text-decoration:none;
@@ -72,8 +72,8 @@ text-decoration:none;
 display:inline-block;
 
 box-shadow:
-4px 4px 0 #0b3a82,
-6px 8px 14px rgba(0,0,0,.20);
+0 1px 0 #0b3a82,
+4px 6px 10px rgba(0,0,0,.18);
 
 transition:all .15s ease;
 
@@ -87,8 +87,8 @@ translate(-1px,-1px);
 filter:brightness(1.08);
 
 box-shadow:
-5px 5px 0 #0b3a82,
-8px 10px 16px rgba(0,0,0,.24);
+0 1px 0 #0b3a82,
+6px 8px 12px rgba(0,0,0,.22);
 
 }
 .switch-btn:active{
@@ -137,6 +137,10 @@ box-shadow:
 inset 2px 2px 5px rgba(0,0,0,.08),
 4px 4px 10px rgba(0,0,0,.12);
 
+}
+
+ .location-select{
+    margin-top:12px;
 }
 
 textarea{
@@ -273,41 +277,29 @@ Reset
 
 <input type="text" id="lname" placeholder="Last Name" required>
 
-<select id="location">
-
-<option value="">Select Location</option>
-
-<option>1st Counter</option>
-<option>2nd Counter</option>
-<option>3rd Counter</option>
-<option>4th Counter</option>
-<option>5th Counter</option>
-<option>6th Counter</option>
-<option>7th Counter</option>
-<option>8th Counter</option>
-
-<option>Ground Floor Counter 10</option>
-<option>Ground Floor Counter 11</option>
-
-<option>Group Counter</option>
-<option>Group Counter/Lost & Found</option>
-
-<option>Nij Aatma Manthan</option>
-<option>World of Krishna</option>
-
-<option>270 ft.</option>
-<option>280 ft.</option>
-
-<option>Upgrade Counter/Statue Steps</option>
-
-<option>VIP Gate</option>
-
-<option>Sangam Sthal</option>
-
-<option>Statue Ground Floor</option>
-
-<option>Divyanubhuti Demo Area</option>
-
+<select id="location" class="location-select" aria-label="Select location" required>
+<option value="" selected disabled>Select location</option>
+<option value="1st Counter">🖥️ 1st Counter</option>
+<option value="2nd Counter">🖥️ 2nd Counter</option>
+<option value="3rd Counter">🖥️ 3rd Counter</option>
+<option value="4th Counter">🖥️ 4th Counter</option>
+<option value="5th Counter">🖥️ 5th Counter</option>
+<option value="6th Counter">🖥️ 6th Counter</option>
+<option value="7th Counter">🖥️ 7th Counter</option>
+<option value="8th Counter">🖥️ 8th Counter</option>
+<option value="Ground Floor Counter 10">🖥️ Ground Floor Counter 10</option>
+<option value="Ground Floor Counter 11">🖥️ Ground Floor Counter 11</option>
+<option value="Group Counter">🖥️ Group Counter</option>
+<option value="Group Counter/Lost & Found">🖥️ Group Counter / 🔎 Lost &amp; Found</option>
+<option value="Nij Aatma Manthan">🧘 Nij Aatma Manthan</option>
+<option value="World of Krishna">🪈 World of Krishna</option>
+<option value="280 ft.">📏 280 ft.</option>
+<option value="270 ft.">📏 270 ft.</option>
+<option value="Upgrade Counter/Statue Steps">🖥️ Upgrade Counter / 🪜 Statue Steps</option>
+<option value="VIP Gate">🚪 VIP Gate</option>
+<option value="Sangam Sthal">🎪 Sangam Sthal</option>
+<option value="Statue Ground Floor">🗿 Statue Ground Floor</option>
+<option value="Divyanubhuti Demo Area">🥽 Divyanubhuti Demo Area</option>
 </select>
 
 <textarea id="output" placeholder="Report will appear automatically here..."></textarea>
@@ -333,7 +325,7 @@ const reports = {
 11. Baby Care Room/Emergency Exit Map: N/A
 12. Cleaning/Maintenance: OK
 13. Signages/Standees: OK
-14. RO Water/Facilities: N/A`,
+14. RO Water/Facilities: OK`,
 
 "2nd Counter": "",
 "3rd Counter": "",
@@ -360,20 +352,18 @@ const reports = {
 11. Baby Care Room/Emergency Exit Map: OK
 12. Cleaning/Maintenance: OK
 13. Signages/Standees: OK
-14. RO Water/Facilities: N/A`,
+14. RO Water/Facilities: OK`,
 
-"World of Krishna": `1. Location Name: OK
-2. Cleaning & Hygiene: OK
-3. Lights: OK
-4. AC: Working
-5. Painting Names: OK
-6. Statues: OK
+"World of Krishna": `1. All Names: OK
+2. Cleaning & Hygiene: OK / In progress
+3. Lights & sound: OK
+4. ACs: Working
+5. Statues & Paintings: OK
 7. General Maintenance: OK
 8. Lift: Working
-9. Terrace Area: Open & Clean
+9. Terrace Area: Open & Clean, cleaning in progress
 10. Telephone: OK
-    Aroma Diffuser: OK
-11. Queue Managers & Ropes: OK
+11. Queue Managers: OK
 12. Directional Signages: OK
 
 Overall Status: All OK`,
@@ -391,7 +381,7 @@ Overall Status: All OK`,
 11. Baby Care Room/Emergency Exit Map: N/A
 12. Cleaning/Maintenance: OK
 13. Signages/Standees: OK
-14. RO Water/Facilities: N/A`,
+14. RO Water/Facilities: OK`,
 
 "270 ft.": `1. POS/EDC: N/A
 2. Charger/Printer: N/A
@@ -406,7 +396,7 @@ Overall Status: All OK`,
 11. Baby Care Room/Emergency Exit Map: N/A
 12. Cleaning/Maintenance: OK
 13. Signages/Standees: OK
-14. RO Water/Facilities: Drinking Water Available / N/A`,
+14. RO Water/Facilities: OK`,
 
 "Upgrade Counter/Statue Steps": `1. POS/EDC: Working
 2. Charger/Printer: Available & Working
@@ -421,9 +411,9 @@ Overall Status: All OK`,
 11. Baby Care Room/Emergency Exit Map: N/A
 12. Cleaning/Maintenance: OK
 13. Signages/Standees: OK
-14. RO Water/Facilities: N/A`,
+14. RO Water/Facilities: OK`,
 
-"VIP Gate": `1. POS/EDC: Working
+"VIP Gate": `1. POS/EDC: Working/EDC not available
 2. Charger/Printer: Available & Working
 3. Floats/Bands/Maps: Available
 4. Mic/Cash Key: N/A
@@ -466,7 +456,7 @@ Overall Status: All OK`,
 11. Baby Care Room/Emergency Exit Map: OK
 12. Cleaning/Maintenance: OK
 13. Signages/Standees: OK
-14. RO Water/Facilities: N/A`,
+14. RO Water/Facilities: OK`,
 
 "Divyanubhuti Demo Area": `1. Tab: Available & Working
 2. Charger/Printer: Available & Working
@@ -481,7 +471,7 @@ Overall Status: All OK`,
 11. Baby Care Room/Emergency Exit Map: N/A
 12. Cleaning/Maintenance: OK
 13. Signages/Standees: OK
-14. RO Water/Facilities: N/A`
+14. RO Water/Facilities: OK`
 
 };
 
@@ -544,7 +534,7 @@ Location: ${location}
 
 ${reports[location]}
 
-Notes: ${location === "World of Krishna" ? "All 31 zones checked" : "N/A"}
+${location === "World of Krishna" ? "Notes:\n- All 31 zones checked.\n- Minor cracks in two statues." : "Notes: N/A"}
 
 Reported By:
 ${fname} ${lname}`;
@@ -627,7 +617,7 @@ document.getElementById("fname").value = "";
 
 document.getElementById("lname").value = "";
 
-document.getElementById("location").selectedIndex = 0;
+document.getElementById("location").value = "";
 
 document.getElementById("output").value = "";
 
